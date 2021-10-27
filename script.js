@@ -7,6 +7,7 @@ const ctx = canvas.getContext('2d');
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
+let hue = 0;
 
 
 // Resize the canvas from the default of 800x800px
@@ -16,6 +17,7 @@ canvas.height = window.innerHeight;
 ctx.lineCap = 'round';
 ctx.lineJoin = 'round';
 ctx.strokeStyle = '#BADASS';
+ctx.lineWidth = 100;
 
 // Functions
 
@@ -24,6 +26,7 @@ function draw(e) {
         return;
     // Stops the function from running if the mouse is not clicked down
     console.log(e);
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
     ctx.beginPath();
     //  Start from
     ctx.moveTo(lastX, lastY);
@@ -31,6 +34,11 @@ function draw(e) {
     ctx.lineTo(e.offsetX, e.offsetY);
     ctx.stroke();
     [lastX, lastY] = [e.offsetX, e.offsetY]
+    hue++;
+
+    if (hue >= 360) {
+        hue = 0;
+    }
 }
 
 //  EventListners
