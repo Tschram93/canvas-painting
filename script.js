@@ -7,6 +7,7 @@ const ctx = canvas.getContext('2d');
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
+let direction = true;
 let hue = 0;
 
 
@@ -18,6 +19,7 @@ ctx.lineCap = 'round';
 ctx.lineJoin = 'round';
 ctx.strokeStyle = '#BADASS';
 ctx.lineWidth = 100;
+ctx.globalCompositeOperation = 'multiply';
 
 // Functions
 
@@ -27,6 +29,7 @@ function draw(e) {
     // Stops the function from running if the mouse is not clicked down
     console.log(e);
     ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+
     ctx.beginPath();
     //  Start from
     ctx.moveTo(lastX, lastY);
@@ -39,13 +42,25 @@ function draw(e) {
     if (hue >= 360) {
         hue = 0;
     }
+
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+        direction = !direction;
+    }
+    // Incrementing from 0 to 100
+    if (direction) {
+        ctx.lineWidth++;
+    } // Once it hits 100 it works from 99 on back down
+    else {
+        ctx.lineWidth--;
+    }
+
 }
 
 //  EventListners
-canvas.addEventListener('mousedown', () => {
+canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
 });
+canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', () => isDrawing = false);
 canvas.addEventListener('mouseout', () => isDrawing = false);
-canvas.addEventListener('mousemove', draw);
